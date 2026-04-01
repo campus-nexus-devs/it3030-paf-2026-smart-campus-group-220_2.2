@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Resource Management | Smart Campus</title>
-    <link rel="stylesheet" href="styles.css">
+    <script src="/app-settings.js"></script>
+    <link rel="stylesheet" href="/css/resource.css">
+    <link rel="stylesheet" href="/css/footer.css">
 </head>
 <body>
 <header class="top-nav">
@@ -137,6 +139,8 @@
     </section>
 </main>
 
+<div id="site-footer"></div>
+
 <script>
     const accountLink = document.getElementById("account-link");
     const adminSection = document.getElementById("resource-admin-section");
@@ -157,6 +161,14 @@
     } else {
         adminSection.style.display = "none";
     }
+
+    fetch("/footer.html")
+        .then((response) => response.ok ? response.text() : "")
+        .then((footerHtml) => {
+            const footerContainer = document.getElementById("site-footer");
+            if (footerContainer) footerContainer.innerHTML = footerHtml;
+        })
+        .catch(() => {});
 </script>
 <script src="app.js"></script>
 </body>

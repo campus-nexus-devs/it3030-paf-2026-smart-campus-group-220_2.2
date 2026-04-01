@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard | Smart Campus</title>
-    <link rel="stylesheet" href="styles.css">
+    <script src="/app-settings.js"></script>
+    <link rel="stylesheet" href="/css/admin.css">
+    <link rel="stylesheet" href="/css/footer.css">
 </head>
 <body>
 <header class="top-nav">
@@ -62,6 +64,8 @@
     </section>
 </main>
 
+<div id="site-footer"></div>
+
 <script>
     const accountLink = document.getElementById("account-link");
     const logoutBtn = document.getElementById("admin-logout-btn");
@@ -96,6 +100,14 @@
         localStorage.removeItem("smartCampusUser");
         window.location.href = "/login.html";
     });
+
+    fetch("/footer.html")
+        .then((response) => response.ok ? response.text() : "")
+        .then((footerHtml) => {
+            const footerContainer = document.getElementById("site-footer");
+            if (footerContainer) footerContainer.innerHTML = footerHtml;
+        })
+        .catch(() => {});
 
 </script>
 </body>
