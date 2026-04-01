@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | Smart Campus</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="top-nav">
+    <div class="brand">Smart Campus</div>
+    <nav>
+        <a href="/">Home</a>
+        <a href="/resource.html">Resources</a>
+        <a id="account-link" class="btn-link" href="/profile.html">My Profile</a>
+    </nav>
+</header>
+
+<main class="container">
+    <section class="hero">
+        <p class="eyebrow">ADMIN PANEL</p>
+        <h1>Admin Dashboard</h1>
+        <p class="subtitle">Monitor your smart campus platform and access core management tools.</p>
+        <div class="actions">
+            <a class="btn-primary" href="/resource.html">Manage Resources</a>
+            <a class="btn-secondary" href="/profile.html">Open Profile</a>
+            <button id="admin-logout-btn" type="button">Log Out</button>
+        </div>
+    </section>
+
+    <section class="admin-stats-grid">
+        <article class="admin-stat-card">
+            <p class="admin-stat-label">Total Resources</p>
+            <p id="total-resources" class="admin-stat-value">0</p>
+        </article>
+        <article class="admin-stat-card">
+            <p class="admin-stat-label">Logged In Users</p>
+            <p class="admin-stat-value">1</p>
+        </article>
+        <article class="admin-stat-card">
+            <p class="admin-stat-label">System Status</p>
+            <p class="admin-stat-value">Active</p>
+        </article>
+    </section>
+
+    <section class="card">
+        <h2>Quick Actions</h2>
+        <div class="actions">
+            <a class="btn-primary" href="/resource.html">Add New Resource</a>
+            <a class="btn-secondary" href="/resource.html">Search Resources</a>
+            <a class="btn-secondary" href="/profile.html">Edit Admin Profile</a>
+        </div>
+    </section>
+
+    <section class="card">
+        <h2>Recent Activity</h2>
+        <ul class="admin-activity-list">
+            <li>Admin logged in successfully.</li>
+            <li>Profile module is available.</li>
+            <li>Resource management module is online.</li>
+        </ul>
+    </section>
+</main>
+
+<script>
+    const accountLink = document.getElementById("account-link");
+    const logoutBtn = document.getElementById("admin-logout-btn");
+    const totalResources = document.getElementById("total-resources");
+    const userRaw = localStorage.getItem("smartCampusUser");
+
+    if (userRaw) {
+        try {
+            const user = JSON.parse(userRaw);
+            if (user.role !== "ADMIN") {
+                window.location.href = "/";
+            }
+            const avatarSrc = user.profileImageData || "https://via.placeholder.com/24?text=P";
+            accountLink.innerHTML = `<img class="nav-avatar" src="${avatarSrc}" alt="Profile">My Profile`;
+            fetch("/api/resources")
+                .then((response) => response.ok ? response.json() : [])
+                .then((resources) => {
+                    totalResources.textContent = Array.isArray(resources) ? String(resources.length) : "0";
+                })
+                .catch(() => {
+                    totalResources.textContent = "0";
+                });
+        } catch (_) {
+            localStorage.removeItem("smartCampusUser");
+            window.location.href = "/login.html";
+        }
+    } else {
+        window.location.href = "/login.html";
+    }
+
+    logoutBtn.addEventListener("click", () => {
+        localStorage.removeItem("smartCampusUser");
+        window.location.href = "/login.html";
+    });
+
+</script>
+</body>
+</html>

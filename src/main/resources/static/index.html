@@ -12,13 +12,13 @@
     <nav>
         <a href="/">Home</a>
         <a href="/resource.html">Resources</a>
-        <a class="btn-link" href="/login.html">Login</a>
+        <a id="account-link" class="btn-link" href="/login.html">Login / Sign Up</a>
     </nav>
 </header>
 
 <main class="container">
-    <section class="hero">
-        <div>
+    <section class="hero home-hero">
+        <div class="hero-content">
             <p class="eyebrow">JAVA SPRING BOOT PLATFORM</p>
             <h1>Smart Campus Administration Dashboard</h1>
             <p class="subtitle">
@@ -27,31 +27,75 @@
             </p>
             <div class="actions">
                 <a class="btn-primary" href="/resource.html">Open Resource Module</a>
-                <a class="btn-secondary" href="/login.html">Go To Login</a>
+                <a id="go-to-login-btn" class="btn-secondary" href="/login.html">Go To Login</a>
             </div>
+        </div>
+        <div class="hero-metrics">
+            <article class="metric-card">
+                <p class="metric-label">Uptime</p>
+                <p class="metric-value">99.9%</p>
+            </article>
+            <article class="metric-card">
+                <p class="metric-label">Core Modules</p>
+                <p class="metric-value">4</p>
+            </article>
+            <article class="metric-card">
+                <p class="metric-label">Security</p>
+                <p class="metric-value">Enabled</p>
+            </article>
         </div>
     </section>
 
-    <section class="module-grid">
-        <article class="module-card">
-            <h3>Planned Modules</h3>
-            <ul>
-                <li>Lecture scheduling</li>
-                <li>Attendance and analytics</li>
-                <li>Notifications and events</li>
-            </ul>
-        </article>
+    <section class="home-section">
+        <h2>Platform Highlights</h2>
+        <div class="home-grid">
+            <article class="home-card">
+                <h3>Centralized Operations</h3>
+                <p>Manage resources and workflows from one clean, unified admin interface.</p>
+            </article>
+            <article class="home-card">
+                <h3>Secure Access</h3>
+                <p>Role-aware sign in supports dedicated admin access and user profile management.</p>
+            </article>
+            <article class="home-card">
+                <h3>Scalable Foundation</h3>
+                <p>Built with Spring Boot and REST APIs, ready for additional campus modules.</p>
+            </article>
+        </div>
+    </section>
 
-        <article class="module-card">
-            <h3>Technology Stack</h3>
-            <ul>
-                <li>Java 21</li>
-                <li>Spring Boot</li>
-                <li>Spring Data JPA + MySQL</li>
-                <li>REST APIs with static frontend</li>
-            </ul>
-        </article>
+    <section class="home-section">
+        <h2>Quick Access</h2>
+        <div class="actions">
+            <a class="btn-primary" href="/resource.html">Resources</a>
+            <a id="admin-dashboard-link" class="btn-secondary" href="/admin.html">Admin Dashboard</a>
+            <a class="btn-secondary" href="/profile.html">My Profile</a>
+        </div>
     </section>
 </main>
+<script>
+    const accountLink = document.getElementById("account-link");
+    const adminDashboardLink = document.getElementById("admin-dashboard-link");
+    const goToLoginBtn = document.getElementById("go-to-login-btn");
+
+    const userRaw = localStorage.getItem("smartCampusUser");
+    if (userRaw) {
+        try {
+            const user = JSON.parse(userRaw);
+            const avatarSrc = user.profileImageData || "https://via.placeholder.com/24?text=P";
+            accountLink.innerHTML = `<img class="nav-avatar" src="${avatarSrc}" alt="Profile">My Profile`;
+            accountLink.href = "/profile.html";
+            goToLoginBtn.style.display = "none";
+            if (user.role !== "ADMIN") {
+                adminDashboardLink.style.display = "none";
+            }
+        } catch (_) {
+            localStorage.removeItem("smartCampusUser");
+            adminDashboardLink.style.display = "none";
+        }
+    } else {
+        adminDashboardLink.style.display = "none";
+    }
+</script>
 </body>
 </html>
