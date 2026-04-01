@@ -37,3 +37,4 @@ The project follows a **Client-Server Architecture**:
 
 ---
 © 2026 CampusPulse-Devs | All Rights Reserved.
+# it3030-paf-2026-smart-campus-group-220_2.2
