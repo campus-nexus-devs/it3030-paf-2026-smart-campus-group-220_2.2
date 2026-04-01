@@ -370,3 +370,74 @@ th, td {
     color: #334155;
     line-height: 1.8;
 }
+
+.home-hero {
+    display: grid;
+    grid-template-columns: 1.7fr 1fr;
+    gap: 18px;
+    align-items: stretch;
+}
+
+.hero-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.hero-metrics {
+    display: grid;
+    gap: 10px;
+}
+
+.metric-card {
+    background: #f8fbff;
+    border: 1px solid #dbeafe;
+    border-radius: 12px;
+    padding: 14px;
+}
+
+.metric-label {
+    margin: 0;
+    color: #64748b;
+    font-size: 13px;
+}
+
+.metric-value {
+    margin: 6px 0 0;
+    font-size: 24px;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+.home-section {
+    margin-top: 18px;
+}
+
+.home-section h2 {
+    margin: 0 0 12px;
+}
+
+.home-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+}
+
+.home-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
+}
+
+.home-card h3 {
+    margin: 0 0 8px;
+    font-size: 17px;
+}
+
+.home-card p {
+    margin: 0;
+    color: #475569;
+    line-height: 1.6;
+}
