@@ -1,0 +1,187 @@
+:root {
+    --navy: #0b1120;
+    --navy2: #111827;
+    --navy3: #1a2740;
+    --gold: #c9a84c;
+    --gold2: #f0c96d;
+    --cream: #f5f0e8;
+    --muted: #8899aa;
+    --white: #ffffff;
+    --border: rgba(201,168,76,.18);
+    --glow: rgba(201,168,76,.12);
+    --ff-display: "Playfair Display", Georgia, serif;
+    --ff-body: "DM Sans", "Segoe UI", Arial, sans-serif;
+}
+
+/* Base */
+* {
+    box-sizing: border-box;
+    font-family: var(--ff-body);
+}
+
+body {
+    margin: 0;
+    font-size: var(--app-font-size, 16px);
+    background: var(--navy);
+    color: var(--white);
+}
+
+/* Navbar */
+.top-nav {
+    position: sticky;
+    top: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 32px;
+    background: rgba(11,17,32,.86);
+    border-bottom: 1px solid var(--border);
+}
+
+.brand {
+    font-family: var(--ff-display);
+    font-weight: 700;
+    font-size: 18px;
+    color: var(--gold2);
+}
+
+.top-nav nav {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+}
+
+.top-nav a {
+    text-decoration: none;
+    color: var(--muted);
+    font-size: 14px;
+}
+.top-nav a:hover { color: var(--white); }
+
+.btn-link {
+    background: linear-gradient(135deg, var(--gold), #a87c2a);
+    color: var(--navy) !important;
+    padding: 8px 14px;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.nav-avatar {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+/* Layout */
+.container {
+    max-width: 1100px;
+    margin: auto;
+    padding: 30px 20px;
+}
+
+h1 {
+    margin-bottom: 20px;
+}
+
+/* Card */
+.card {
+    background: var(--navy2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px;
+    margin-bottom: 16px;
+}
+
+/* Grid form */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+}
+
+label {
+    display: flex;
+    flex-direction: column;
+    font-size: 14px;
+    gap: 5px;
+}
+
+/* Inputs */
+input,
+select {
+    padding: 10px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+}
+
+/* Buttons */
+.actions {
+    margin-top: 12px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+button {
+    background: linear-gradient(135deg, var(--gold), #a87c2a);
+    color: var(--navy);
+    border: none;
+    padding: 10px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+button:hover {
+    filter: brightness(1.05);
+}
+
+button.secondary {
+    background: var(--navy3);
+    color: var(--white);
+    border: 1px solid var(--border);
+}
+
+/* Table */
+.table-wrap {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th,
+td {
+    padding: 10px;
+    border-bottom: 1px solid var(--border);
+    text-align: left;
+    font-size: 14px;
+}
+
+/* Status text */
+#status-text {
+    margin-bottom: 10px;
+    color: var(--muted);
+}
+
+footer {
+    background: #070d1a;
+    border-top: 1px solid var(--border);
+    padding: 5rem 5vw 2rem;
+    margin-top: 4rem;
+}
+.footer-top { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 2rem; padding-bottom: 2rem; border-bottom: 1px solid var(--border); }
+.footer-brand h3 { font-family: var(--ff-display); color: var(--gold2); margin-bottom: .7rem; }
+.footer-brand p { color: var(--muted); font-size: .88rem; line-height: 1.7; }
+.footer-col h4 { color: var(--cream); margin-bottom: .8rem; font-size: .78rem; letter-spacing: .14em; text-transform: uppercase; }
+.footer-col ul { list-style: none; }
+.footer-col li { margin-bottom: .5rem; }
+.footer-col a, .footer-bottom a { color: var(--muted); text-decoration: none; }
+.footer-col a:hover, .footer-bottom a:hover { color: var(--gold); }
+.footer-bottom { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem; padding-top: 1rem; color: var(--muted); font-size: .82rem; }
+@media (max-width: 768px) { .footer-top { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 480px) { .footer-top { grid-template-columns: 1fr; } }

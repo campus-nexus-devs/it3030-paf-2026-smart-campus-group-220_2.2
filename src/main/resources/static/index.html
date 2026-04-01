@@ -4,7 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Smart Campus Management</title>
-  <link rel="stylesheet" href="index.css">
+  <script src="/app-settings.js"></script>
+  <link rel="stylesheet" href="/css/index.css">
+  <link rel="stylesheet" href="/css/footer.css">
 </head>
 <body>
 
@@ -213,63 +215,7 @@
   </div>
 </div>
 
-<!-- ── FOOTER ─────────────────────────────────────────── -->
-<footer>
-  <div class="footer-top">
-    <div class="footer-brand">
-      <h3>Smart Campus</h3>
-      <p>
-        A Java Spring Boot platform for modern university administration —
-        secure, modular, and built to scale with your institution.
-      </p>
-      <div class="footer-socials">
-        <a class="social-btn" href="#" title="GitHub">⌥</a>
-        <a class="social-btn" href="#" title="Twitter">𝕏</a>
-        <a class="social-btn" href="#" title="LinkedIn">in</a>
-        <a class="social-btn" href="#" title="Email">✉</a>
-      </div>
-    </div>
-
-    <div class="footer-col">
-      <h4>Platform</h4>
-      <ul>
-        <li><a href="/resource.html">Resources</a></li>
-        <li><a href="/admin.html">Admin Dashboard</a></li>
-        <li><a href="/profile.html">My Profile</a></li>
-        <li><a href="/login.html">Login / Register</a></li>
-      </ul>
-    </div>
-
-    <div class="footer-col">
-      <h4>Technology</h4>
-      <ul>
-        <li><a href="#">Spring Boot 3.x</a></li>
-        <li><a href="#">REST API</a></li>
-        <li><a href="#">JWT Security</a></li>
-        <li><a href="#">JPA / Hibernate</a></li>
-      </ul>
-    </div>
-
-    <div class="footer-col">
-      <h4>Support</h4>
-      <ul>
-        <li><a href="#">Documentation</a></li>
-        <li><a href="#">API Reference</a></li>
-        <li><a href="#">Contact Admin</a></li>
-        <li><a href="#">System Status</a></li>
-      </ul>
-    </div>
-  </div>
-
-  <div class="footer-bottom">
-    <p>© 2024 Smart Campus Management. All rights reserved.</p>
-    <span class="status-dot">All systems operational</span>
-    <div style="display:flex;gap:1.5rem;">
-      <a href="#">Privacy Policy</a>
-      <a href="#">Terms of Service</a>
-    </div>
-  </div>
-</footer>
+<div id="site-footer"></div>
 
 <!-- ── JS ─────────────────────────────────────────────── -->
 <script>
@@ -312,6 +258,14 @@
   }, { threshold: 0.12 });
 
   document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+  fetch("/footer.html")
+    .then((response) => response.ok ? response.text() : "")
+    .then((footerHtml) => {
+      const footerContainer = document.getElementById("site-footer");
+      if (footerContainer) footerContainer.innerHTML = footerHtml;
+    })
+    .catch(() => {});
 </script>
 </body>
 </html>

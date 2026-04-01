@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login | Smart Campus</title>
-    <link rel="stylesheet" href="login.css">
+    <script src="/app-settings.js"></script>
+    <link rel="stylesheet" href="/css/login.css">
+    <link rel="stylesheet" href="/css/footer.css">
 </head>
 <body class="auth-page">
 <main class="auth-wrapper">
@@ -45,6 +47,8 @@
         <a class="inline-link" href="/">Back to Home</a>
     </section>
 </main>
+
+<div id="site-footer"></div>
 
 <script>
     const signinTab = document.getElementById("signin-tab");
@@ -137,6 +141,14 @@
             loginStatus.textContent = error.message;
         }
     });
+
+    fetch("/footer.html")
+        .then((response) => response.ok ? response.text() : "")
+        .then((footerHtml) => {
+            const footerContainer = document.getElementById("site-footer");
+            if (footerContainer) footerContainer.innerHTML = footerHtml;
+        })
+        .catch(() => {});
 </script>
 </body>
 </html>

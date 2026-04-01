@@ -23,6 +23,7 @@
 
     body {
       font-family: var(--ff-body);
+      font-size: var(--app-font-size, 16px);
       background: var(--navy);
       color: var(--white);
       line-height: 1.6;

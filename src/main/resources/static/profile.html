@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Profile | Smart Campus</title>
-    <link rel="stylesheet" href="profile.css">
+    <script src="/app-settings.js"></script>
+    <link rel="stylesheet" href="/css/profile.css">
+    <link rel="stylesheet" href="/css/footer.css">
 </head>
 <body>
 <header class="top-nav">
@@ -36,7 +38,48 @@
             <button id="logout-btn" type="button">Log Out</button>
         </div>
     </section>
+
+    <section class="card settings-card">
+        <h2>System Settings</h2>
+        <p class="subtitle">These settings apply across all pages in the system.</p>
+
+        <div class="grid">
+            <label>Theme
+                <select id="theme-setting">
+                    <option value="dark">Dark</option>
+                    <option value="light">Light</option>
+                </select>
+            </label>
+
+            <label>Font Size
+                <select id="font-size-setting">
+                    <option value="small">Small</option>
+                    <option value="medium">Medium</option>
+                    <option value="large">Large</option>
+                </select>
+            </label>
+
+            <label>Font Style
+                <select id="font-style-setting">
+                    <option value="dmSans">DM Sans</option>
+                    <option value="inter">Inter</option>
+                    <option value="serif">Serif</option>
+                    <option value="system">System UI</option>
+                </select>
+            </label>
+        </div>
+
+        <div class="actions">
+            <button id="save-settings-btn" type="button">Save Settings</button>
+            <button id="backup-settings-btn" type="button">Backup</button>
+            <button id="restore-settings-btn" type="button" class="btn-secondary">Restore</button>
+            <input id="restore-file-input" class="hidden" type="file" accept=".json,application/json">
+        </div>
+        <p id="settings-status" class="status-text"></p>
+    </section>
 </main>
+
+<div id="site-footer"></div>
 
 <script>
     const profileDetails = document.getElementById("profile-details");
@@ -46,6 +89,14 @@
     const editProfileBtn = document.getElementById("edit-profile-btn");
     const saveProfileBtn = document.getElementById("save-profile-btn");
     const logoutBtn = document.getElementById("logout-btn");
+    const themeSetting = document.getElementById("theme-setting");
+    const fontSizeSetting = document.getElementById("font-size-setting");
+    const fontStyleSetting = document.getElementById("font-style-setting");
+    const saveSettingsBtn = document.getElementById("save-settings-btn");
+    const backupSettingsBtn = document.getElementById("backup-settings-btn");
+    const restoreSettingsBtn = document.getElementById("restore-settings-btn");
+    const restoreFileInput = document.getElementById("restore-file-input");
+    const settingsStatus = document.getElementById("settings-status");
     let currentUser = null;
     let isEditMode = false;
 
@@ -173,6 +224,89 @@
         localStorage.removeItem("smartCampusUser");
         window.location.href = "/login.html";
     });
+
+    const settingsApi = window.SmartCampusSettings;
+    if (settingsApi) {
+        const currentSettings = settingsApi.load();
+        themeSetting.value = currentSettings.theme;
+        fontSizeSetting.value = currentSettings.fontSize;
+        fontStyleSetting.value = currentSettings.fontStyle;
+    }
+
+    saveSettingsBtn.addEventListener("click", () => {
+        const settingsApiInner = window.SmartCampusSettings;
+        if (!settingsApiInner) {
+            settingsStatus.textContent = "Settings service is unavailable.";
+            return;
+        }
+        settingsApiInner.save({
+            theme: themeSetting.value,
+            fontSize: fontSizeSetting.value,
+            fontStyle: fontStyleSetting.value
+        });
+        settingsStatus.textContent = "Settings saved and applied system-wide.";
+    });
+
+    backupSettingsBtn.addEventListener("click", () => {
+        const payload = {
+            smartCampusUser: localStorage.getItem("smartCampusUser"),
+            smartCampusSettings: localStorage.getItem("smartCampusSettings"),
+            exportedAt: new Date().toISOString()
+        };
+        const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+        const downloadUrl = URL.createObjectURL(blob);
+        const anchor = document.createElement("a");
+        anchor.href = downloadUrl;
+        anchor.download = "smart-campus-backup.json";
+        anchor.click();
+        URL.revokeObjectURL(downloadUrl);
+        settingsStatus.textContent = "Backup downloaded successfully.";
+    });
+
+    restoreSettingsBtn.addEventListener("click", () => {
+        restoreFileInput.click();
+    });
+
+    restoreFileInput.addEventListener("change", () => {
+        const file = restoreFileInput.files && restoreFileInput.files[0];
+        if (!file) {
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            try {
+                const parsed = JSON.parse(String(event.target && event.target.result ? event.target.result : "{}"));
+                if (typeof parsed.smartCampusUser === "string") {
+                    localStorage.setItem("smartCampusUser", parsed.smartCampusUser);
+                }
+                if (typeof parsed.smartCampusSettings === "string") {
+                    localStorage.setItem("smartCampusSettings", parsed.smartCampusSettings);
+                    const settingsApiInner = window.SmartCampusSettings;
+                    if (settingsApiInner) {
+                        const restoredSettings = settingsApiInner.load();
+                        settingsApiInner.apply(restoredSettings);
+                        themeSetting.value = restoredSettings.theme;
+                        fontSizeSetting.value = restoredSettings.fontSize;
+                        fontStyleSetting.value = restoredSettings.fontStyle;
+                    }
+                }
+                settingsStatus.textContent = "Restore completed. Reloading...";
+                setTimeout(() => window.location.reload(), 600);
+            } catch (_) {
+                settingsStatus.textContent = "Invalid backup file. Please select a valid JSON backup.";
+            }
+        };
+        reader.readAsText(file);
+    });
+
+    fetch("/footer.html")
+        .then((response) => response.ok ? response.text() : "")
+        .then((footerHtml) => {
+            const footerContainer = document.getElementById("site-footer");
+            if (footerContainer) footerContainer.innerHTML = footerHtml;
+        })
+        .catch(() => {});
 </script>
 </body>
 </html>
