@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | Smart Campus</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="auth-page">
+<main class="auth-wrapper">
+    <section class="auth-card">
+        <h1>Welcome Back</h1>
+        <p class="subtitle">Sign in to access your Smart Campus modules.</p>
+
+        <form id="login-form">
+            <label>Email
+                <input id="email" type="email" placeholder="admin@smartcampus.edu" required>
+            </label>
+
+            <label>Password
+                <input id="password" type="password" placeholder="Enter password" required>
+            </label>
+
+            <button type="submit" class="btn-primary full-width">Sign In</button>
+        </form>
+
+        <p id="login-status" class="status-text"></p>
+        <p class="tiny-text">Demo login page UI for Spring Boot project presentation.</p>
+        <a class="inline-link" href="/">Back to Home</a>
+    </section>
+</main>
+
+<script>
+    const loginForm = document.getElementById("login-form");
+    const loginStatus = document.getElementById("login-status");
+
+    loginForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+        loginStatus.textContent = "Login successful. Redirecting to module...";
+        setTimeout(() => {
+            window.location.href = "/resource.html";
+        }, 700);
+    });
+</script>
+</body>
+</html>
