@@ -11,15 +11,14 @@
     <div class="brand">Smart Campus</div>
     <nav>
         <a href="/">Home</a>
-        <a href="/resource.html">Resources</a>
-        <a class="btn-link" href="/login.html">Login</a>
+        <a id="account-link" class="btn-link" href="/login.html">Login</a>
     </nav>
 </header>
 
 <main class="container">
     <h1>Resource Management</h1>
 
-    <section class="card">
+    <section id="resource-admin-section" class="card">
         <h2>Add / Update Resource</h2>
         <form id="resource-form">
             <input type="hidden" id="resource-id">
@@ -137,6 +136,27 @@
     </section>
 </main>
 
+<script>
+    const accountLink = document.getElementById("account-link");
+    const adminSection = document.getElementById("resource-admin-section");
+    const userRaw = localStorage.getItem("smartCampusUser");
+    if (userRaw) {
+        try {
+            const user = JSON.parse(userRaw);
+            const avatarSrc = user.profileImageData || "https://via.placeholder.com/24?text=P";
+            accountLink.innerHTML = `<img class="nav-avatar" src="${avatarSrc}" alt="Profile">My Profile`;
+            accountLink.href = "/profile.html";
+            if (user.role !== "ADMIN") {
+                adminSection.style.display = "none";
+            }
+        } catch (_) {
+            localStorage.removeItem("smartCampusUser");
+            adminSection.style.display = "none";
+        }
+    } else {
+        adminSection.style.display = "none";
+    }
+</script>
 <script src="app.js"></script>
 </body>
 </html>

@@ -11,47 +11,152 @@
     <div class="brand">Smart Campus</div>
     <nav>
         <a href="/">Home</a>
-        <a href="/resource.html">Resources</a>
-        <a class="btn-link" href="/login.html">Login</a>
+        <a id="account-link" class="btn-link" href="/login.html">Login / Sign Up</a>
     </nav>
 </header>
 
 <main class="container">
-    <section class="hero">
-        <div>
-            <p class="eyebrow">JAVA SPRING BOOT PLATFORM</p>
-            <h1>Smart Campus Administration Dashboard</h1>
-            <p class="subtitle">
-                Manage campus operations with a clean, centralized portal for administration teams.
-                Built with Java Spring Boot and designed for scalable modules.
-            </p>
-            <div class="actions">
-                <a class="btn-primary" href="/resource.html">Open Resource Module</a>
-                <a class="btn-secondary" href="/login.html">Go To Login</a>
+    <h1>Resource Management</h1>
+
+    <section id="resource-admin-section" class="card">
+        <h2>Add / Update Resource</h2>
+        <form id="resource-form">
+            <input type="hidden" id="resource-id">
+
+            <div class="grid">
+                <label>Name
+                    <input id="name" required>
+                </label>
+
+                <label>Type
+                    <select id="type" required>
+                        <option value="HALL">HALL</option>
+                        <option value="LAB">LAB</option>
+                        <option value="PROJECTOR">PROJECTOR</option>
+                    </select>
+                </label>
+
+                <label>Location
+                    <input id="location" required>
+                </label>
+
+                <label>Capacity
+                    <input id="capacity" type="number" min="1" required>
+                </label>
+
+                <label>WiFi Available
+                    <select id="wifiAvailable">
+                        <option value="true">Yes</option>
+                        <option value="false">No</option>
+                    </select>
+                </label>
+
+                <label>AC Available
+                    <select id="acAvailable">
+                        <option value="true">Yes</option>
+                        <option value="false">No</option>
+                    </select>
+                </label>
             </div>
+
+            <div class="actions">
+                <button type="submit">Save Resource</button>
+                <button type="button" id="cancel-edit" class="secondary">Cancel Edit</button>
+            </div>
+        </form>
+    </section>
+
+    <section class="card">
+        <h2>Advanced Search & Filtering</h2>
+        <form id="filter-form" class="grid">
+            <label>Name
+                <input id="filter-name" placeholder="e.g. Main Hall">
+            </label>
+
+            <label>Type
+                <select id="filter-type">
+                    <option value="">Any</option>
+                    <option value="HALL">HALL</option>
+                    <option value="LAB">LAB</option>
+                    <option value="PROJECTOR">PROJECTOR</option>
+                </select>
+            </label>
+
+            <label>Min Capacity
+                <input id="filter-min-capacity" type="number" min="1">
+            </label>
+
+            <label>Max Capacity
+                <input id="filter-max-capacity" type="number" min="1">
+            </label>
+
+            <label>WiFi
+                <select id="filter-wifi">
+                    <option value="">Any</option>
+                    <option value="true">Yes</option>
+                    <option value="false">No</option>
+                </select>
+            </label>
+
+            <label>AC
+                <select id="filter-ac">
+                    <option value="">Any</option>
+                    <option value="true">Yes</option>
+                    <option value="false">No</option>
+                </select>
+            </label>
+        </form>
+
+        <div class="actions">
+            <button id="apply-filters" type="button">Apply Filters</button>
+            <button id="clear-filters" type="button" class="secondary">Clear Filters</button>
         </div>
     </section>
 
-    <section class="module-grid">
-        <article class="module-card">
-            <h3>Planned Modules</h3>
-            <ul>
-                <li>Lecture scheduling</li>
-                <li>Attendance and analytics</li>
-                <li>Notifications and events</li>
-            </ul>
-        </article>
-
-        <article class="module-card">
-            <h3>Technology Stack</h3>
-            <ul>
-                <li>Java 21</li>
-                <li>Spring Boot</li>
-                <li>Spring Data JPA + MySQL</li>
-                <li>REST APIs with static frontend</li>
-            </ul>
-        </article>
+    <section class="card">
+        <h2>Resources</h2>
+        <p id="status-text"></p>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Type</th>
+                    <th>Location</th>
+                    <th>Capacity</th>
+                    <th>WiFi</th>
+                    <th>AC</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody id="resource-table-body"></tbody>
+            </table>
+        </div>
     </section>
 </main>
+<script>
+    const accountLink = document.getElementById("account-link");
+    const adminSection = document.getElementById("resource-admin-section");
+
+    const userRaw = localStorage.getItem("smartCampusUser");
+    if (userRaw) {
+        try {
+            const user = JSON.parse(userRaw);
+            const avatarSrc = user.profileImageData || "https://via.placeholder.com/24?text=P";
+            accountLink.innerHTML = `<img class="nav-avatar" src="${avatarSrc}" alt="Profile">My Profile`;
+            accountLink.href = "/profile.html";
+            if (user.role !== "ADMIN") {
+                adminSection.style.display = "none";
+            }
+        } catch (_) {
+            localStorage.removeItem("smartCampusUser");
+            adminSection.style.display = "none";
+        }
+    } else {
+        adminSection.style.display = "none";
+    }
+</script>
+<script src="app.js"></script>
 </body>
 </html>

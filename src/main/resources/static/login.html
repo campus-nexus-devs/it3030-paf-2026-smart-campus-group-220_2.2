@@ -10,36 +10,132 @@
 <main class="auth-wrapper">
     <section class="auth-card">
         <h1>Welcome Back</h1>
-        <p class="subtitle">Sign in to access your Smart Campus modules.</p>
+        <p class="subtitle">Sign in or create an account to access Smart Campus modules.</p>
 
-        <form id="login-form">
+        <div class="auth-toggle">
+            <button id="signin-tab" class="auth-tab active" type="button">Sign In</button>
+            <button id="signup-tab" class="auth-tab" type="button">Sign Up</button>
+        </div>
+
+        <form id="signin-form">
             <label>Email
-                <input id="email" type="email" placeholder="admin@smartcampus.edu" required>
+                <input id="signin-email" type="email" placeholder="admin@smartcampus.edu" required>
             </label>
-
             <label>Password
-                <input id="password" type="password" placeholder="Enter password" required>
+                <input id="signin-password" type="password" placeholder="Enter password" required>
             </label>
-
             <button type="submit" class="btn-primary full-width">Sign In</button>
         </form>
 
+        <form id="signup-form" class="hidden">
+            <label>Full Name
+                <input id="signup-name" type="text" placeholder="Your full name" required>
+            </label>
+            <label>Email
+                <input id="signup-email" type="email" placeholder="you@smartcampus.edu" required>
+            </label>
+            <label>Password
+                <input id="signup-password" type="password" minlength="6" placeholder="Minimum 6 characters" required>
+            </label>
+            <button type="submit" class="btn-primary full-width">Create Account</button>
+        </form>
+
         <p id="login-status" class="status-text"></p>
-        <p class="tiny-text">Demo login page UI for Spring Boot project presentation.</p>
+        <p class="tiny-text">Your account is saved in the project database.</p>
         <a class="inline-link" href="/">Back to Home</a>
     </section>
 </main>
 
 <script>
-    const loginForm = document.getElementById("login-form");
+    const signinTab = document.getElementById("signin-tab");
+    const signupTab = document.getElementById("signup-tab");
+    const signinForm = document.getElementById("signin-form");
+    const signupForm = document.getElementById("signup-form");
     const loginStatus = document.getElementById("login-status");
 
-    loginForm.addEventListener("submit", (event) => {
+    function setActiveTab(tab) {
+        const isSignIn = tab === "signin";
+        signinTab.classList.toggle("active", isSignIn);
+        signupTab.classList.toggle("active", !isSignIn);
+        signinForm.classList.toggle("hidden", !isSignIn);
+        signupForm.classList.toggle("hidden", isSignIn);
+        loginStatus.textContent = "";
+    }
+
+    signinTab.addEventListener("click", () => setActiveTab("signin"));
+    signupTab.addEventListener("click", () => setActiveTab("signup"));
+
+    signinForm.addEventListener("submit", async (event) => {
         event.preventDefault();
-        loginStatus.textContent = "Login successful. Redirecting to module...";
-        setTimeout(() => {
-            window.location.href = "/resource.html";
-        }, 700);
+        loginStatus.textContent = "Signing in...";
+        try {
+            const email = document.getElementById("signin-email").value.trim().toLowerCase();
+            const password = document.getElementById("signin-password").value;
+
+            if (email === "admin@gmail.com" && password === "123456") {
+                const adminUser = {
+                    userId: 0,
+                    fullName: "System Admin",
+                    firstName: "System",
+                    lastName: "Admin",
+                    email: "admin@gmail.com",
+                    role: "ADMIN"
+                };
+                localStorage.setItem("smartCampusUser", JSON.stringify(adminUser));
+                loginStatus.textContent = "Admin login successful. Redirecting...";
+                setTimeout(() => (window.location.href = "/admin.html"), 700);
+                return;
+            }
+
+            const response = await fetch("/api/auth/signin", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    email,
+                    password
+                })
+            });
+            const body = await response.json();
+            if (!response.ok) {
+                throw new Error(body.message || "Sign in failed");
+            }
+
+            localStorage.setItem("smartCampusUser", JSON.stringify({
+                ...body,
+                role: "USER"
+            }));
+            loginStatus.textContent = `Welcome, ${body.fullName}. Redirecting...`;
+            setTimeout(() => (window.location.href = "/"), 700);
+        } catch (error) {
+            loginStatus.textContent = error.message;
+        }
+    });
+
+    signupForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        loginStatus.textContent = "Creating account...";
+        try {
+            const response = await fetch("/api/auth/signup", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    fullName: document.getElementById("signup-name").value.trim(),
+                    email: document.getElementById("signup-email").value.trim(),
+                    password: document.getElementById("signup-password").value
+                })
+            });
+            const body = await response.json();
+            if (!response.ok) {
+                throw new Error(body.message || "Sign up failed");
+            }
+
+            loginStatus.textContent = "Sign up successful. Please sign in.";
+            signupForm.reset();
+            setActiveTab("signin");
+            document.getElementById("signin-email").value = body.email;
+        } catch (error) {
+            loginStatus.textContent = error.message;
+        }
     });
 </script>
 </body>
