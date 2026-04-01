@@ -1,0 +1,192 @@
+:root {
+    --bg: #f2f5fb;
+    --card: #ffffff;
+    --text: #1f2937;
+    --muted: #6b7280;
+    --primary: #2563eb;
+    --primary-dark: #1d4ed8;
+    --border: #dbe1ea;
+}
+
+/* Base */
+* {
+    box-sizing: border-box;
+    font-family: "Inter", "Segoe UI", Arial, sans-serif;
+}
+
+body {
+    margin: 0;
+    background: linear-gradient(180deg, #eef3ff 0%, var(--bg) 40%);
+    color: var(--text);
+}
+
+/* Navbar */
+.top-nav {
+    position: sticky;
+    top: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 32px;
+    background: rgba(255, 255, 255, 0.92);
+    border-bottom: 1px solid var(--border);
+}
+
+.brand {
+    font-weight: 700;
+    font-size: 18px;
+}
+
+.top-nav nav {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+}
+
+.top-nav a {
+    text-decoration: none;
+    color: var(--text);
+    font-size: 14px;
+}
+
+.btn-link {
+    background: var(--primary);
+    color: #fff !important;
+    padding: 8px 14px;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.nav-avatar {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+/* Layout */
+.container {
+    max-width: 900px;
+    margin: auto;
+    padding: 30px 20px;
+}
+
+h2 {
+    margin-bottom: 5px;
+}
+
+.subtitle {
+    color: var(--muted);
+    margin-bottom: 20px;
+}
+
+/* Card */
+.card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 24px;
+}
+
+/* Profile Avatar */
+.profile-avatar-top {
+    display: flex;
+    justify-content: center;
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.profile-avatar {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #dbeafe;
+    box-shadow: 0 8px 20px rgba(37, 99, 235, 0.2);
+}
+
+.avatar-edit-btn {
+    position: absolute;
+    bottom: 5px;
+    right: calc(50% - 70px);
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: var(--primary);
+    color: #fff;
+    border: 2px solid #fff;
+    cursor: pointer;
+}
+
+.avatar-edit-btn:hover {
+    background: var(--primary-dark);
+}
+
+/* Grid Form */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 14px;
+}
+
+label {
+    display: flex;
+    flex-direction: column;
+    font-size: 14px;
+    gap: 6px;
+}
+
+input {
+    padding: 10px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+}
+
+input:disabled {
+    background: #f8fafc;
+}
+
+/* Buttons */
+.actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+
+button,
+.btn-secondary {
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+button {
+    background: var(--primary);
+    color: white;
+}
+
+button:hover {
+    background: var(--primary-dark);
+}
+
+.btn-secondary {
+    background: #64748b;
+    color: #fff;
+    text-decoration: none;
+}
+
+/* Status */
+.status-text {
+    margin-top: 10px;
+    color: var(--muted);
+}
+
+/* Utility */
+.hidden {
+    display: none;
+}
