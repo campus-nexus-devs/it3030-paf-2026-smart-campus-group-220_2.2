@@ -100,6 +100,100 @@
     let currentUser = null;
     let isEditMode = false;
 
+    async function fetchProfileFromDatabase(user) {
+        const uid = user.userId;
+        if (uid == null || uid === 0 || user.role === "ADMIN") {
+            return user;
+        }
+        try {
+            const res = await fetch(`/api/users/${uid}`);
+            if (!res.ok) {
+                return user;
+            }
+            const p = await res.json();
+            return {
+                ...user,
+                userId: p.userId,
+                firstName: p.firstName ?? "",
+                lastName: p.lastName ?? "",
+                fullName: p.fullName,
+                email: p.email,
+                contactNumber: p.contactNumber ?? "",
+                address: p.address ?? "",
+                profileImageData: p.profileImageData
+            };
+        } catch (_) {
+            return user;
+        }
+    }
+
+    function escAttr(value) {
+        return String(value ?? "").replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;");
+    }
+
+    function renderProfileUi(user) {
+        const navAvatarSrc =
+            user.profileImageData && user.profileImageData.startsWith("data:")
+                ? user.profileImageData
+                : "https://via.placeholder.com/24?text=P";
+        accountLink.innerHTML = `<img class="nav-avatar" src="${navAvatarSrc}" alt="Profile">My Profile`;
+        const nameParts = (user.fullName || "").trim().split(/\s+/).filter(Boolean);
+        const firstName = user.firstName || nameParts[0] || "";
+        const lastName = user.lastName || nameParts.slice(1).join(" ") || "";
+        profileDetails.innerHTML = `
+                <label>User ID
+                    <input type="text" value="${escAttr(user.userId)}" readonly>
+                </label>
+                <label>First Name
+                    <input id="first-name" class="editable-field" type="text" value="${escAttr(firstName)}" disabled>
+                </label>
+                <label>Last Name
+                    <input id="last-name" class="editable-field" type="text" value="${escAttr(lastName)}" disabled>
+                </label>
+                <label>Email
+                    <input type="text" value="${escAttr(user.email)}" readonly>
+                </label>
+                <label>Contact Number
+                    <input id="contact-number" class="editable-field" type="tel" value="${escAttr(user.contactNumber)}" placeholder="+94 77 123 4567" disabled>
+                </label>
+                <label>Address
+                    <input id="address" class="editable-field" type="text" value="${escAttr(user.address)}" placeholder="Enter your address" disabled>
+                </label>
+                <label>Profile Image
+                    <input id="profile-image-file" class="hidden" type="file" accept="image/*">
+                </label>
+            `;
+        const profilePreview = document.getElementById("profile-preview");
+        const imgSrc =
+            user.profileImageData && user.profileImageData.startsWith("data:")
+                ? user.profileImageData
+                : "https://via.placeholder.com/140?text=Profile";
+        profilePreview.src = imgSrc;
+        delete profilePreview.dataset.uploadedImage;
+
+        const profileImageInput = document.getElementById("profile-image-file");
+        avatarEditBtn.onclick = () => profileImageInput.click();
+        profileImageInput.onchange = () => {
+            const file = profileImageInput.files && profileImageInput.files[0];
+            if (!file) {
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                const imageData = event.target && event.target.result ? String(event.target.result) : "";
+                profilePreview.src = imageData || "https://via.placeholder.com/120?text=Profile";
+                profilePreview.dataset.uploadedImage = imageData;
+                currentUser = { ...currentUser, profileImageData: imageData };
+                localStorage.setItem("smartCampusUser", JSON.stringify(currentUser));
+                accountLink.innerHTML = `<img class="nav-avatar" src="${imageData}" alt="Profile">My Profile`;
+                profileStatus.textContent = "Image ready — click Update Profile to save to the database.";
+            };
+            reader.readAsDataURL(file);
+        };
+        setEditMode(false);
+    }
+
     function setEditMode(enabled) {
         isEditMode = enabled;
         const editableInputs = profileDetails.querySelectorAll(".editable-field");
@@ -117,69 +211,22 @@
         editProfileBtn.disabled = true;
         saveProfileBtn.disabled = true;
     } else {
-        try {
-            const user = JSON.parse(userRaw);
-            currentUser = user;
-            const navAvatarSrc = user.profileImageData || "https://via.placeholder.com/24?text=P";
-            accountLink.innerHTML = `<img class="nav-avatar" src="${navAvatarSrc}" alt="Profile">My Profile`;
-            const nameParts = (user.fullName || "").trim().split(/\s+/).filter(Boolean);
-            const firstName = user.firstName || nameParts[0] || "";
-            const lastName = user.lastName || nameParts.slice(1).join(" ") || "";
-            profileDetails.innerHTML = `
-                <label>User ID
-                    <input type="text" value="${user.userId ?? ""}" readonly>
-                </label>
-                <label>First Name
-                    <input id="first-name" class="editable-field" type="text" value="${firstName}" disabled>
-                </label>
-                <label>Last Name
-                    <input id="last-name" class="editable-field" type="text" value="${lastName}" disabled>
-                </label>
-                <label>Email
-                    <input type="text" value="${user.email ?? ""}" readonly>
-                </label>
-                <label>Contact Number
-                    <input id="contact-number" class="editable-field" type="tel" value="${user.contactNumber ?? ""}" placeholder="+94 77 123 4567" disabled>
-                </label>
-                <label>Address
-                    <input id="address" class="editable-field" type="text" value="${user.address ?? ""}" placeholder="Enter your address" disabled>
-                </label>
-                <label>Profile Image
-                    <input id="profile-image-file" class="hidden" type="file" accept="image/*">
-                </label>
-            `;
-            const profilePreview = document.getElementById("profile-preview");
-            profilePreview.src = user.profileImageData || "https://via.placeholder.com/140?text=Profile";
-            profileStatus.textContent = "Profile loaded.";
-            setEditMode(false);
-
-            const profileImageInput = document.getElementById("profile-image-file");
-            avatarEditBtn.addEventListener("click", () => profileImageInput.click());
-            profileImageInput.addEventListener("change", () => {
-                const file = profileImageInput.files && profileImageInput.files[0];
-                if (!file) {
-                    return;
-                }
-
-                const reader = new FileReader();
-                reader.onload = (event) => {
-                    const imageData = event.target && event.target.result ? String(event.target.result) : "";
-                    profilePreview.src = imageData || "https://via.placeholder.com/120?text=Profile";
-                    profilePreview.dataset.uploadedImage = imageData;
-                    currentUser = { ...currentUser, profileImageData: imageData };
-                    localStorage.setItem("smartCampusUser", JSON.stringify(currentUser));
-                    accountLink.innerHTML = `<img class="nav-avatar" src="${currentUser.profileImageData || "https://via.placeholder.com/24?text=P"}" alt="Profile">My Profile`;
-                    profileStatus.textContent = "Profile image updated.";
-                };
-                reader.readAsDataURL(file);
-            });
-        } catch (_) {
-            localStorage.removeItem("smartCampusUser");
-            profileStatus.textContent = "Session invalid. Please sign in again.";
-            avatarEditBtn.disabled = true;
-            editProfileBtn.disabled = true;
-            saveProfileBtn.disabled = true;
-        }
+        (async () => {
+            try {
+                let user = JSON.parse(userRaw);
+                user = await fetchProfileFromDatabase(user);
+                currentUser = user;
+                localStorage.setItem("smartCampusUser", JSON.stringify(user));
+                renderProfileUi(user);
+                profileStatus.textContent = "Profile loaded from database.";
+            } catch (_) {
+                localStorage.removeItem("smartCampusUser");
+                profileStatus.textContent = "Session invalid. Please sign in again.";
+                avatarEditBtn.disabled = true;
+                editProfileBtn.disabled = true;
+                saveProfileBtn.disabled = true;
+            }
+        })();
     }
 
     editProfileBtn.addEventListener("click", () => {
@@ -190,7 +237,7 @@
         profileStatus.textContent = "Edit mode enabled.";
     });
 
-    saveProfileBtn.addEventListener("click", () => {
+    saveProfileBtn.addEventListener("click", async () => {
         if (!currentUser || !isEditMode) {
             return;
         }
@@ -201,7 +248,54 @@
         const contactNumber = document.getElementById("contact-number").value.trim();
         const address = document.getElementById("address").value.trim();
         const profilePreview = document.getElementById("profile-preview");
-        const profileImageData = profilePreview.dataset.uploadedImage || currentUser.profileImageData || profilePreview.src;
+        let imagePayload = null;
+        if (profilePreview.dataset.uploadedImage && profilePreview.dataset.uploadedImage.startsWith("data:")) {
+            imagePayload = profilePreview.dataset.uploadedImage;
+        } else if (currentUser.profileImageData && currentUser.profileImageData.startsWith("data:")) {
+            imagePayload = currentUser.profileImageData;
+        }
+
+        const uid = currentUser.userId;
+        const isDbUser = uid != null && uid !== 0 && currentUser.role !== "ADMIN";
+
+        if (isDbUser) {
+            profileStatus.textContent = "Saving to database...";
+            try {
+                const res = await fetch(`/api/users/${uid}`, {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        firstName,
+                        lastName,
+                        contactNumber,
+                        address,
+                        profileImageData: imagePayload
+                    })
+                });
+                const body = await res.json().catch(() => ({}));
+                if (!res.ok) {
+                    throw new Error(body.message || "Could not save profile");
+                }
+                currentUser = {
+                    ...currentUser,
+                    userId: body.userId,
+                    firstName: body.firstName,
+                    lastName: body.lastName,
+                    fullName: body.fullName,
+                    email: body.email,
+                    contactNumber: body.contactNumber ?? "",
+                    address: body.address ?? "",
+                    profileImageData: body.profileImageData
+                };
+                localStorage.setItem("smartCampusUser", JSON.stringify(currentUser));
+                renderProfileUi(currentUser);
+                profileStatus.textContent = "Profile saved to the database (check phpMyAdmin → app_users).";
+                return;
+            } catch (err) {
+                profileStatus.textContent = err.message || "Save failed.";
+                return;
+            }
+        }
 
         const updatedUser = {
             ...currentUser,
@@ -210,14 +304,12 @@
             fullName,
             contactNumber,
             address,
-            profileImageData
+            profileImageData: imagePayload || currentUser.profileImageData
         };
-
         localStorage.setItem("smartCampusUser", JSON.stringify(updatedUser));
         currentUser = updatedUser;
-        accountLink.innerHTML = `<img class="nav-avatar" src="${updatedUser.profileImageData || "https://via.placeholder.com/24?text=P"}" alt="Profile">My Profile`;
-        profileStatus.textContent = "Profile updated successfully.";
-        setEditMode(false);
+        renderProfileUi(currentUser);
+        profileStatus.textContent = "Profile updated (local session only).";
     });
 
     logoutBtn.addEventListener("click", () => {
