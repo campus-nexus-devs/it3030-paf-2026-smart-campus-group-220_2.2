@@ -239,6 +239,9 @@
       }
     } catch (_) {
       localStorage.removeItem("smartCampusUser");
+      if (window.SmartCampusResourceApi && typeof window.SmartCampusResourceApi.clearCredentials === "function") {
+        window.SmartCampusResourceApi.clearCredentials();
+      }
       if (adminDashboardLink) adminDashboardLink.style.display = "none";
       if (adminNavLink) adminNavLink.style.display = "none";
     }

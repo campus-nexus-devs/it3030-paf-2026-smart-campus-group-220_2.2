@@ -33,6 +33,7 @@ public class ResourceService {
         Resource existing = getById(id);
         existing.setName(updatedResource.getName());
         existing.setType(updatedResource.getType());
+        existing.setCategory(updatedResource.getCategory());
         existing.setLocation(updatedResource.getLocation());
         existing.setCapacity(updatedResource.getCapacity());
         existing.setWifiAvailable(updatedResource.isWifiAvailable());
@@ -47,6 +48,7 @@ public class ResourceService {
 
     public List<Resource> search(String name,
                                  ResourceType type,
+                                 ResourceCategory category,
                                  Integer minCapacity,
                                  Integer maxCapacity,
                                  Boolean wifiAvailable,
@@ -58,6 +60,9 @@ public class ResourceService {
         }
         if (type != null) {
             spec = spec.and(ResourceSpecifications.hasType(type));
+        }
+        if (category != null) {
+            spec = spec.and(ResourceSpecifications.hasCategory(category));
         }
         if (minCapacity != null) {
             spec = spec.and(ResourceSpecifications.capacityGreaterThanOrEqual(minCapacity));

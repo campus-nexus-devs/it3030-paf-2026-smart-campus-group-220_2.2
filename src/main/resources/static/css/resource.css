@@ -58,6 +58,31 @@ body {
 }
 .top-nav a:hover { color: var(--white); }
 
+.admin-main-nav {
+    display: flex;
+    align-items: center;
+    gap: 4px 16px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+.admin-main-nav a {
+    text-decoration: none;
+    color: var(--muted);
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.admin-main-nav a:hover {
+    color: var(--white);
+}
+
+.admin-main-nav .nav-current {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--gold2);
+}
+
 .btn-link {
     background: linear-gradient(135deg, var(--gold), #a87c2a);
     color: var(--navy) !important;
@@ -84,6 +109,62 @@ body {
 
 h1 {
     margin-bottom: 20px;
+}
+
+.resource-browse-intro {
+    color: var(--muted);
+    font-size: 14px;
+    margin: 0 0 14px;
+    line-height: 1.5;
+}
+
+.resource-browse-intro a {
+    color: var(--gold2);
+}
+
+.resource-category-buttons {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 10px;
+}
+
+.category-pick {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+    line-height: 1.35;
+    min-height: 72px;
+    padding: 12px 14px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--navy3);
+    color: var(--cream);
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+    transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.category-pick:hover {
+    filter: none;
+    border-color: var(--gold);
+    box-shadow: 0 0 0 1px rgba(201, 168, 76, 0.25);
+}
+
+.category-pick.is-active {
+    border-color: var(--gold2);
+    background: linear-gradient(145deg, rgba(201, 168, 76, 0.15), var(--navy3));
+    box-shadow: 0 0 0 1px var(--gold);
+}
+
+.category-pick-sub {
+    display: block;
+    margin-top: 6px;
+    font-weight: 400;
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.4;
 }
 
 /* Card */

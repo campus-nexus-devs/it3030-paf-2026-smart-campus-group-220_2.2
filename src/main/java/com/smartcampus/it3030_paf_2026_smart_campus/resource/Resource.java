@@ -29,6 +29,10 @@ public class Resource {
     @Column(nullable = false)
     private ResourceType type;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "reservation_category", length = 40)
+    private ResourceCategory category;
+
     @NotBlank
     @Column(nullable = false)
     private String location;
@@ -66,6 +70,14 @@ public class Resource {
 
     public void setType(ResourceType type) {
         this.type = type;
+    }
+
+    public ResourceCategory getCategory() {
+        return category;
+    }
+
+    public void setCategory(ResourceCategory category) {
+        this.category = category;
     }
 
     public String getLocation() {

@@ -35,12 +35,13 @@ public class ResourceController {
     public List<Resource> getAllOrSearch(
             @RequestParam(required = false) String name,
             @RequestParam(required = false) ResourceType type,
+            @RequestParam(required = false) ResourceCategory category,
             @RequestParam(required = false) Integer minCapacity,
             @RequestParam(required = false) Integer maxCapacity,
             @RequestParam(required = false) Boolean wifiAvailable,
             @RequestParam(required = false) Boolean acAvailable
     ) {
-        return resourceService.search(name, type, minCapacity, maxCapacity, wifiAvailable, acAvailable);
+        return resourceService.search(name, type, category, minCapacity, maxCapacity, wifiAvailable, acAvailable);
     }
 
     @GetMapping("/{id}")

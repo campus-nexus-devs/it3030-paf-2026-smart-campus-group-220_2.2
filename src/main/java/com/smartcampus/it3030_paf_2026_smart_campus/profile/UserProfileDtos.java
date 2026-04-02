@@ -22,4 +22,18 @@ public class UserProfileDtos {
             String profileImageData
     ) {
     }
+
+    /**
+     * Summary row for admin user list (no password or large image payload).
+     */
+    public record UserAdminListResponse(
+            Long userId,
+            String fullName,
+            String email,
+            String contactNumber,
+            String address,
+            String registeredAt,
+            String role
+    ) {
+    }
 }
