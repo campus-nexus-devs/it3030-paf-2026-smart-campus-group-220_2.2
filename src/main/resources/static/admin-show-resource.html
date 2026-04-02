@@ -3,58 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Campus Resources | Smart Campus</title>
+    <title>Show resources | Admin</title>
     <script src="/app-settings.js"></script>
     <script>
-        (function redirectAdminsToManagePage() {
+        window.RESOURCE_ADMIN_PAGE = "list";
+        (function enforceAdmin() {
             try {
                 const raw = localStorage.getItem("smartCampusUser");
-                if (!raw) return;
-                if (JSON.parse(raw).role === "ADMIN") {
-                    window.location.replace("/admin-show-resource.html");
+                if (!raw) {
+                    window.location.replace("/login.html");
+                    return;
+                }
+                if (JSON.parse(raw).role !== "ADMIN") {
+                    window.location.replace("/resource.html");
                 }
             } catch (_) {
+                window.location.replace("/login.html");
             }
         })();
     </script>
-    <link rel="stylesheet" href="/css/resource.css">
+    <link rel="stylesheet" href="/css/admin.css">
+    <link rel="stylesheet" href="/css/admin-show-resource.css">
     <link rel="stylesheet" href="/css/footer.css">
 </head>
-<body>
-<header class="top-nav">
-    <div class="brand">Smart Campus</div>
-    <nav>
-        <a href="/">Home</a>
-        <a href="/resource.html">Resources</a>
-        <a id="account-link" class="btn-link" href="/login.html">Login</a>
-    </nav>
-</header>
-
-<main class="container">
-    <h1>Campus resources</h1>
-    <p class="resource-browse-intro">Browse spaces and equipment. Reservation categories help you find the right resource.</p>
-
-    <section class="card resource-browse-card">
-        <h2>Browse by reservation type</h2>
-        <p class="resource-browse-intro">Pick a category to list matching resources. To see all resources again, set Category to “All categories” in Advanced Search or use Clear filters.</p>
-        <div class="resource-category-buttons" role="group" aria-label="Reservation categories">
-            <button type="button" class="category-pick" data-category="STAFF_LEARNING">
-                Learning space reservation<br><span class="category-pick-sub">Staff only</span>
-            </button>
-            <button type="button" class="category-pick" data-category="STUDENT_DISCUSSION">
-                Discussion space reservation<br><span class="category-pick-sub">Students</span>
-            </button>
-            <button type="button" class="category-pick" data-category="HALL_LAB">
-                Halls &amp; labs<br><span class="category-pick-sub">Lecture hall, main hall, network lab, computer lab, etc.</span>
-            </button>
-            <button type="button" class="category-pick" data-category="PROJECTOR_EQUIPMENT">
-                Projectors &amp; equipment<br><span class="category-pick-sub">Projection &amp; similar gear</span>
-            </button>
-        </div>
-    </section>
+<body class="admin-show-resource-page">
+<div class="admin-app">
+    <aside class="admin-sidebar">
+        <p class="admin-sidebar-title">Management</p>
+        <nav class="admin-sidebar-nav" aria-label="Management modules">
+            <a href="/admin.html" class="admin-sidebar-link">Dashboard</a>
+            <a href="/admin-users.html" class="admin-sidebar-link">User management</a>
+            <details class="admin-sidebar-details has-active-child" open>
+                <summary class="admin-sidebar-summary">Resource management</summary>
+                <div class="admin-sidebar-dropdown-panel">
+                    <a href="/admin-show-resource.html" class="admin-sidebar-sublink is-active">Show resources</a>
+                    <a href="/admin-add-resource.html" class="admin-sidebar-sublink">Add resource</a>
+                </div>
+            </details>
+            <a href="/admin-contact.html" class="admin-sidebar-link">Contact us management</a>
+        </nav>
+    </aside>
+    <div class="admin-content">
+        <header class="admin-top-bar">
+            <span class="admin-top-bar-brand">Smart Campus — Admin</span>
+            <a href="/profile.html" class="admin-top-bar-link">My Profile</a>
+        </header>
+        <main class="admin-main-scroll">
+            <div class="admin-page-inner">
+    <h1>Resources</h1>
+    <p class="resource-browse-intro">Search, filter, edit, or delete resources. Use <strong>Add resource</strong> to create new entries.</p>
 
     <section class="card">
-        <h2>Advanced Search & Filtering</h2>
+        <h2>Search &amp; filters</h2>
         <form id="filter-form" class="grid">
             <label>Name
                 <input id="filter-name" placeholder="e.g. Main Hall">
@@ -111,10 +111,10 @@
     </section>
 
     <section class="card">
-        <h2>Available resources</h2>
+        <h2>Resources</h2>
         <p id="status-text"></p>
-        <div class="table-wrap">
-            <table>
+        <div class="table-wrap admin-show-resource-table-wrap">
+            <table class="admin-show-resource-table">
                 <thead>
                 <tr>
                     <th>ID</th>
@@ -125,36 +125,20 @@
                     <th>Capacity</th>
                     <th>WiFi</th>
                     <th>AC</th>
+                    <th id="resource-actions-th">Actions</th>
                 </tr>
                 </thead>
                 <tbody id="resource-table-body"></tbody>
             </table>
         </div>
     </section>
-</main>
-
-<div id="site-footer"></div>
+            </div>
+        </main>
+        <div id="site-footer"></div>
+    </div>
+</div>
 
 <script>
-    window.RESOURCE_PAGE_MODE = "browse";
-
-    const accountLink = document.getElementById("account-link");
-    const navHomeLink = document.getElementById("nav-home-link");
-    const userRaw = localStorage.getItem("smartCampusUser");
-    if (userRaw) {
-        try {
-            const user = JSON.parse(userRaw);
-            const avatarSrc = user.profileImageData || "https://via.placeholder.com/24?text=P";
-            accountLink.innerHTML = `<img class="nav-avatar" src="${avatarSrc}" alt="Profile">My Profile`;
-            accountLink.href = "/profile.html";
-        } catch (_) {
-            localStorage.removeItem("smartCampusUser");
-            if (window.SmartCampusResourceApi && typeof window.SmartCampusResourceApi.clearCredentials === "function") {
-                window.SmartCampusResourceApi.clearCredentials();
-            }
-        }
-    }
-
     fetch("/footer.html")
         .then((response) => response.ok ? response.text() : "")
         .then((footerHtml) => {

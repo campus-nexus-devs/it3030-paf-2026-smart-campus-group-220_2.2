@@ -33,6 +33,21 @@ public class AppUser {
     @Column(nullable = false)
     private String passwordHash;
 
+    @Column(length = 120)
+    private String firstName;
+
+    @Column(length = 120)
+    private String lastName;
+
+    @Column(length = 32)
+    private String contactNumber;
+
+    @Column(length = 500)
+    private String address;
+
+    @Column(columnDefinition = "LONGTEXT")
+    private String profileImageData;
+
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 

@@ -15,6 +15,10 @@ public final class ResourceSpecifications {
         return (root, query, cb) -> cb.equal(root.get("type"), type);
     }
 
+    public static Specification<Resource> hasCategory(ResourceCategory category) {
+        return (root, query, cb) -> cb.equal(root.get("category"), category);
+    }
+
     public static Specification<Resource> capacityGreaterThanOrEqual(Integer minCapacity) {
         return (root, query, cb) -> cb.greaterThanOrEqualTo(root.get("capacity"), minCapacity);
     }

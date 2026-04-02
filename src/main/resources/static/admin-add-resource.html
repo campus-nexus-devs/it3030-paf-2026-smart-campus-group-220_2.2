@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add resource | Admin</title>
+    <script src="/app-settings.js"></script>
+    <script>
+        window.RESOURCE_ADMIN_PAGE = "add";
+        (function enforceAdmin() {
+            try {
+                const raw = localStorage.getItem("smartCampusUser");
+                if (!raw) {
+                    window.location.replace("/login.html");
+                    return;
+                }
+                if (JSON.parse(raw).role !== "ADMIN") {
+                    window.location.replace("/resource.html");
+                }
+            } catch (_) {
+                window.location.replace("/login.html");
+            }
+        })();
+    </script>
+    <link rel="stylesheet" href="/css/admin.css">
+    <link rel="stylesheet" href="/css/admin-add-resource.css">
+    <link rel="stylesheet" href="/css/footer.css">
+</head>
+<body class="admin-add-resource-page">
+<div class="admin-app">
+    <aside class="admin-sidebar">
+        <p class="admin-sidebar-title">Management</p>
+        <nav class="admin-sidebar-nav" aria-label="Management modules">
+            <a href="/admin.html" class="admin-sidebar-link">Dashboard</a>
+            <a href="/admin-users.html" class="admin-sidebar-link">User management</a>
+            <details class="admin-sidebar-details has-active-child" open>
+                <summary class="admin-sidebar-summary">Resource management</summary>
+                <div class="admin-sidebar-dropdown-panel">
+                    <a href="/admin-show-resource.html" class="admin-sidebar-sublink">Show resources</a>
+                    <a href="/admin-add-resource.html" class="admin-sidebar-sublink is-active">Add resource</a>
+                </div>
+            </details>
+            <a href="/admin-contact.html" class="admin-sidebar-link">Contact us management</a>
+        </nav>
+    </aside>
+    <div class="admin-content">
+        <header class="admin-top-bar">
+            <span class="admin-top-bar-brand">Smart Campus — Admin</span>
+            <a href="/profile.html" class="admin-top-bar-link">My Profile</a>
+        </header>
+        <main class="admin-main-scroll">
+            <div class="admin-page-inner">
+    <h1>Add / update resource</h1>
+    <p class="resource-browse-intro">Create a new resource or follow a link from <strong>Show resources</strong> to edit an existing one.</p>
+
+    <section id="resource-admin-section" class="card">
+        <h2>Add / Update Resource</h2>
+        <p id="form-status" class="status-text"></p>
+        <form id="resource-form">
+            <input type="hidden" id="resource-id">
+
+            <div class="grid">
+                <label>Name
+                    <input id="name" required>
+                </label>
+
+                <label>Type
+                    <select id="type" required>
+                        <option value="HALL">HALL</option>
+                        <option value="LAB">LAB</option>
+                        <option value="PROJECTOR">PROJECTOR</option>
+                    </select>
+                </label>
+
+                <label>Reservation category
+                    <select id="resource-category" required>
+                        <option value="STAFF_LEARNING">Learning space (staff only)</option>
+                        <option value="STUDENT_DISCUSSION">Discussion space (students)</option>
+                        <option value="HALL_LAB">Halls &amp; labs</option>
+                        <option value="PROJECTOR_EQUIPMENT">Projectors &amp; equipment</option>
+                    </select>
+                </label>
+
+                <label>Location
+                    <input id="location" required>
+                </label>
+
+                <label>Capacity
+                    <input id="capacity" type="number" min="1" required>
+                </label>
+
+                <label>WiFi Available
+                    <select id="wifiAvailable">
+                        <option value="true">Yes</option>
+                        <option value="false">No</option>
+                    </select>
+                </label>
+
+                <label>AC Available
+                    <select id="acAvailable">
+                        <option value="true">Yes</option>
+                        <option value="false">No</option>
+                    </select>
+                </label>
+            </div>
+
+            <div class="actions">
+                <button type="submit">Save Resource</button>
+                <button type="button" id="cancel-edit" class="secondary">Cancel Edit</button>
+            </div>
+        </form>
+    </section>
+            </div>
+        </main>
+        <div id="site-footer"></div>
+    </div>
+</div>
+
+<script>
+    fetch("/footer.html")
+        .then((response) => response.ok ? response.text() : "")
+        .then((footerHtml) => {
+            const footerContainer = document.getElementById("site-footer");
+            if (footerContainer) footerContainer.innerHTML = footerHtml;
+        })
+        .catch(() => {});
+</script>
+<script src="app.js"></script>
+</body>
+</html>

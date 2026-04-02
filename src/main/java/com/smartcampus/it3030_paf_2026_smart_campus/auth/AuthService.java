@@ -26,7 +26,11 @@ public class AuthService {
         }
 
         AppUser user = new AppUser();
-        user.setFullName(request.fullName().trim());
+        String trimmedName = request.fullName().trim();
+        user.setFullName(trimmedName);
+        String[] nameParts = trimmedName.split("\\s+", 2);
+        user.setFirstName(nameParts[0]);
+        user.setLastName(nameParts.length > 1 ? nameParts[1] : "");
         user.setEmail(normalizedEmail);
         user.setPasswordHash(passwordEncoder.encode(request.password()));
         AppUser saved = appUserRepository.save(user);

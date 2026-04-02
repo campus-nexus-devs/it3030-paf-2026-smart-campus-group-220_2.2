@@ -88,4 +88,50 @@
         apply: applySettings,
         key: SETTINGS_KEY
     };
+
+    const RESOURCE_ADMIN_BASIC_USER = "admin";
+    const RESOURCE_ADMIN_BASIC_PASSWORD = "123456";
+
+    window.SmartCampusResourceApi = {
+        rememberAdminCredentials() {
+            localStorage.setItem(
+                "smartCampusResourceApiAuth",
+                btoa(`${RESOURCE_ADMIN_BASIC_USER}:${RESOURCE_ADMIN_BASIC_PASSWORD}`)
+            );
+        },
+        clearCredentials() {
+            localStorage.removeItem("smartCampusResourceApiAuth");
+        },
+        mutationHeaders() {
+            const headers = {};
+            const token = localStorage.getItem("smartCampusResourceApiAuth");
+            if (token) {
+                headers.Authorization = `Basic ${token}`;
+            }
+            return headers;
+        }
+    };
+
+    (function redirectAdminToDashboardOnly() {
+        try {
+            const raw = localStorage.getItem("smartCampusUser");
+            if (!raw) {
+                return;
+            }
+            const user = JSON.parse(raw);
+            if (user.role !== "ADMIN") {
+                return;
+            }
+            const path = (window.location.pathname || "").split("?")[0];
+            const base = path.replace(/\/$/, "") || "/";
+            const onUserOnlyPage =
+                base === "/" ||
+                base.endsWith("/index.html") ||
+                base.endsWith("/login.html");
+            if (onUserOnlyPage) {
+                window.location.replace("/admin.html");
+            }
+        } catch (_) {
+        }
+    })();
 })();
