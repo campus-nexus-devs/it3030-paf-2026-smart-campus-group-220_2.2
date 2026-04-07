@@ -1,4 +1,4 @@
-package com.smartcampus.it3030_paf_2026_smart_campus.resource;
+package com.smartcampus.it3030_paf_2026_smart_campus.enums;
 
 public enum ResourceType {
     HALL,

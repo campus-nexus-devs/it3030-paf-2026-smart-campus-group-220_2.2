@@ -1,5 +1,9 @@
-package com.smartcampus.it3030_paf_2026_smart_campus.resource;
+package com.smartcampus.it3030_paf_2026_smart_campus.controller;
 
+import com.smartcampus.it3030_paf_2026_smart_campus.enums.ResourceCategory;
+import com.smartcampus.it3030_paf_2026_smart_campus.enums.ResourceType;
+import com.smartcampus.it3030_paf_2026_smart_campus.entity.Resource;
+import com.smartcampus.it3030_paf_2026_smart_campus.service.ResourceService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;

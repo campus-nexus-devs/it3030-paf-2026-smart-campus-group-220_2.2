@@ -1,4 +1,4 @@
-package com.smartcampus.it3030_paf_2026_smart_campus.auth;
+package com.smartcampus.it3030_paf_2026_smart_campus.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
