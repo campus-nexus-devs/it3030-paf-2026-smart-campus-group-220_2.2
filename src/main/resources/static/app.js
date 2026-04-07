@@ -111,12 +111,6 @@ function renderResources(resources) {
 
     resources.forEach((resource) => {
         const row = document.createElement("tr");
-        const actionsCell = showActions
-            ? `<td>
-                <button type="button" data-id="${resource.id}" class="edit-btn">Edit</button>
-                <button type="button" data-id="${resource.id}" class="delete-btn secondary">Delete</button>
-            </td>`
-            : "";
         row.innerHTML = `
             <td>${resource.id}</td>
             <td>${resource.name}</td>
@@ -126,8 +120,15 @@ function renderResources(resources) {
             <td>${resource.capacity}</td>
             <td>${resource.wifiAvailable ? "Yes" : "No"}</td>
             <td>${resource.acAvailable ? "Yes" : "No"}</td>
-            ${actionsCell}
         `;
+        if (showActions) {
+            row.insertAdjacentHTML("beforeend", `
+                <td>
+                    <button type="button" data-id="${resource.id}" class="edit-btn">Edit</button>
+                    <button type="button" data-id="${resource.id}" class="delete-btn secondary">Delete</button>
+                </td>
+            `);
+        }
         tbody.appendChild(row);
     });
 
