@@ -1,5 +1,6 @@
-package com.smartcampus.it3030_paf_2026_smart_campus.auth;
+package com.smartcampus.it3030_paf_2026_smart_campus.repository;
 
+import com.smartcampus.it3030_paf_2026_smart_campus.entity.AppUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

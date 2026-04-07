@@ -1,5 +1,7 @@
-package com.smartcampus.it3030_paf_2026_smart_campus.resource;
+package com.smartcampus.it3030_paf_2026_smart_campus.entity;
 
+import com.smartcampus.it3030_paf_2026_smart_campus.enums.ResourceCategory;
+import com.smartcampus.it3030_paf_2026_smart_campus.enums.ResourceType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

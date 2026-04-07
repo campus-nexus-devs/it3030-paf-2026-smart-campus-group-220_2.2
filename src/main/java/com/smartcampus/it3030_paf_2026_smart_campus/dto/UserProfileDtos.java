@@ -1,4 +1,4 @@
-package com.smartcampus.it3030_paf_2026_smart_campus.profile;
+package com.smartcampus.it3030_paf_2026_smart_campus.dto;
 
 public class UserProfileDtos {
 

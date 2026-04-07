@@ -1,4 +1,4 @@
-package com.smartcampus.it3030_paf_2026_smart_campus.common;
+package com.smartcampus.it3030_paf_2026_smart_campus.exception;
 
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;

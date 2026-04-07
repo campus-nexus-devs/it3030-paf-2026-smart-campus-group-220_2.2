@@ -1,4 +1,4 @@
-package com.smartcampus.it3030_paf_2026_smart_campus.auth;
+package com.smartcampus.it3030_paf_2026_smart_campus.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

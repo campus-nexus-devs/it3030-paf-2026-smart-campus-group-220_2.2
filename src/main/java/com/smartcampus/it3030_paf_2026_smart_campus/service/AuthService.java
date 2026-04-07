@@ -1,11 +1,13 @@
-package com.smartcampus.it3030_paf_2026_smart_campus.auth;
+package com.smartcampus.it3030_paf_2026_smart_campus.service;
 
+import com.smartcampus.it3030_paf_2026_smart_campus.entity.AppUser;
+import com.smartcampus.it3030_paf_2026_smart_campus.repository.AppUserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import static com.smartcampus.it3030_paf_2026_smart_campus.auth.AuthDtos.AuthResponse;
-import static com.smartcampus.it3030_paf_2026_smart_campus.auth.AuthDtos.SignInRequest;
-import static com.smartcampus.it3030_paf_2026_smart_campus.auth.AuthDtos.SignUpRequest;
+import static com.smartcampus.it3030_paf_2026_smart_campus.dto.AuthDtos.AuthResponse;
+import static com.smartcampus.it3030_paf_2026_smart_campus.dto.AuthDtos.SignInRequest;
+import static com.smartcampus.it3030_paf_2026_smart_campus.dto.AuthDtos.SignUpRequest;
 
 @Service
 public class AuthService {

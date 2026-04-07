@@ -1,7 +1,10 @@
-package com.smartcampus.it3030_paf_2026_smart_campus.profile;
+package com.smartcampus.it3030_paf_2026_smart_campus.service;
 
-import com.smartcampus.it3030_paf_2026_smart_campus.auth.AppUser;
-import com.smartcampus.it3030_paf_2026_smart_campus.auth.AppUserRepository;
+import com.smartcampus.it3030_paf_2026_smart_campus.entity.AppUser;
+import com.smartcampus.it3030_paf_2026_smart_campus.repository.AppUserRepository;
+import com.smartcampus.it3030_paf_2026_smart_campus.dto.UserProfileDtos.UpdateUserProfileRequest;
+import com.smartcampus.it3030_paf_2026_smart_campus.dto.UserProfileDtos.UserAdminListResponse;
+import com.smartcampus.it3030_paf_2026_smart_campus.dto.UserProfileDtos.UserProfileResponse;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Sort;
@@ -10,10 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.smartcampus.it3030_paf_2026_smart_campus.profile.UserProfileDtos.UpdateUserProfileRequest;
-import static com.smartcampus.it3030_paf_2026_smart_campus.profile.UserProfileDtos.UserAdminListResponse;
-import static com.smartcampus.it3030_paf_2026_smart_campus.profile.UserProfileDtos.UserProfileResponse;
 
 @Service
 public class UserProfileService {

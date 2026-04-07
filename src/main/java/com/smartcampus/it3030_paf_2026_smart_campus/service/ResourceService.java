@@ -1,5 +1,9 @@
-package com.smartcampus.it3030_paf_2026_smart_campus.resource;
+package com.smartcampus.it3030_paf_2026_smart_campus.service;
 
+import com.smartcampus.it3030_paf_2026_smart_campus.repository.ResourceRepository;
+import com.smartcampus.it3030_paf_2026_smart_campus.entity.Resource;
+import com.smartcampus.it3030_paf_2026_smart_campus.enums.ResourceCategory;
+import com.smartcampus.it3030_paf_2026_smart_campus.enums.ResourceType;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -53,28 +57,29 @@ public class ResourceService {
                                  Integer maxCapacity,
                                  Boolean wifiAvailable,
                                  Boolean acAvailable) {
-        Specification<Resource> spec = Specification.where(null);
+        Specification<Resource> spec = (root, query, cb) -> cb.conjunction();
 
         if (name != null && !name.isBlank()) {
-            spec = spec.and(ResourceSpecifications.nameContains(name));
+            spec = spec.and((root, query, cb) ->
+                    cb.like(cb.lower(root.get("name")), "%" + name.toLowerCase() + "%"));
         }
         if (type != null) {
-            spec = spec.and(ResourceSpecifications.hasType(type));
+            spec = spec.and((root, query, cb) -> cb.equal(root.get("type"), type));
         }
         if (category != null) {
-            spec = spec.and(ResourceSpecifications.hasCategory(category));
+            spec = spec.and((root, query, cb) -> cb.equal(root.get("category"), category));
         }
         if (minCapacity != null) {
-            spec = spec.and(ResourceSpecifications.capacityGreaterThanOrEqual(minCapacity));
+            spec = spec.and((root, query, cb) -> cb.greaterThanOrEqualTo(root.get("capacity"), minCapacity));
         }
         if (maxCapacity != null) {
-            spec = spec.and(ResourceSpecifications.capacityLessThanOrEqual(maxCapacity));
+            spec = spec.and((root, query, cb) -> cb.lessThanOrEqualTo(root.get("capacity"), maxCapacity));
         }
         if (wifiAvailable != null) {
-            spec = spec.and(ResourceSpecifications.hasWifi(wifiAvailable));
+            spec = spec.and((root, query, cb) -> cb.equal(root.get("wifiAvailable"), wifiAvailable));
         }
         if (acAvailable != null) {
-            spec = spec.and(ResourceSpecifications.hasAc(acAvailable));
+            spec = spec.and((root, query, cb) -> cb.equal(root.get("acAvailable"), acAvailable));
         }
 
         return resourceRepository.findAll(spec);
