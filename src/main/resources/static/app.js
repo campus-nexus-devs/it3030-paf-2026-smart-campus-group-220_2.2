@@ -100,6 +100,15 @@ function addParamIfPresent(params, key, value) {
     }
 }
 
+function escapeHtml(value) {
+    return String(value == null ? "" : value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+}
+
 function renderResources(resources) {
     tbody.innerHTML = "";
 
@@ -113,10 +122,10 @@ function renderResources(resources) {
         const row = document.createElement("tr");
         row.innerHTML = `
             <td>${resource.id}</td>
-            <td>${resource.name}</td>
-            <td>${resource.type}</td>
-            <td>${formatCategoryLabel(resource.category)}</td>
-            <td>${resource.location}</td>
+            <td>${escapeHtml(resource.name)}</td>
+            <td>${escapeHtml(resource.type)}</td>
+            <td>${escapeHtml(formatCategoryLabel(resource.category))}</td>
+            <td>${escapeHtml(resource.location)}</td>
             <td>${resource.capacity}</td>
             <td>${resource.wifiAvailable ? "Yes" : "No"}</td>
             <td>${resource.acAvailable ? "Yes" : "No"}</td>

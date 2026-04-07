@@ -193,7 +193,12 @@
                 const id = r.userId;
                 const roleLabel = r.role || "USER";
                 const isPortalAdmin = id === 0 || roleLabel === "ADMIN";
-                const esc = (s) => String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/"/g, "&quot;");
+                const esc = (s) => String(s == null ? "" : s)
+                    .replace(/&/g, "&amp;")
+                    .replace(/</g, "&lt;")
+                    .replace(/>/g, "&gt;")
+                    .replace(/"/g, "&quot;")
+                    .replace(/'/g, "&#39;");
                 const rowClass = isPortalAdmin ? "admin-users-row admin-users-row--portal" : "admin-users-row";
                 const roleClass = roleLabel === "ADMIN"
                     ? "admin-users-role admin-users-role--admin"
@@ -275,7 +280,13 @@
                     ["Email", email],
                     ["Note", "Portal administrator from the login page (not stored in app_users)."]
                 ];
-                dialogViewDl.innerHTML = rows.map(([k, v]) => "<dt>" + k + "</dt><dd>" + String(v).replace(/</g, "&lt;") + "</dd>").join("");
+                const esc = (s) => String(s == null ? "" : s)
+                    .replace(/&/g, "&amp;")
+                    .replace(/</g, "&lt;")
+                    .replace(/>/g, "&gt;")
+                    .replace(/"/g, "&quot;")
+                    .replace(/'/g, "&#39;");
+                dialogViewDl.innerHTML = rows.map(([k, v]) => "<dt>" + esc(k) + "</dt><dd>" + esc(v) + "</dd>").join("");
                 dialogView.showModal();
                 return;
             }
@@ -303,7 +314,13 @@
                 ["Contact", p.contactNumber || "—"],
                 ["Address", p.address || "—"]
             ];
-            dialogViewDl.innerHTML = rows.map(([k, v]) => "<dt>" + k + "</dt><dd>" + String(v).replace(/</g, "&lt;") + "</dd>").join("");
+            const esc = (s) => String(s == null ? "" : s)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#39;");
+            dialogViewDl.innerHTML = rows.map(([k, v]) => "<dt>" + esc(k) + "</dt><dd>" + esc(v) + "</dd>").join("");
 
             if (p.profileImageData && p.profileImageData.startsWith("data:image")) {
                 dialogViewImg.src = p.profileImageData;

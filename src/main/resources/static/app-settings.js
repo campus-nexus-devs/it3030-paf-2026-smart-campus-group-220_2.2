@@ -93,6 +93,8 @@
     const RESOURCE_ADMIN_BASIC_PASSWORD = "123456";
 
     window.SmartCampusResourceApi = {
+        adminUsername: RESOURCE_ADMIN_BASIC_USER,
+        adminPassword: RESOURCE_ADMIN_BASIC_PASSWORD,
         rememberAdminCredentials() {
             localStorage.setItem(
                 "smartCampusResourceApiAuth",

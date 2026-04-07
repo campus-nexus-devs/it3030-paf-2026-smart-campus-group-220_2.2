@@ -118,9 +118,20 @@ public class UserProfileService {
             user.setProfileImageData(null);
             return;
         }
-        if (img.startsWith("data:image")) {
+        if (img.startsWith("data:image") || img.startsWith("http://") || img.startsWith("https://")) {
             user.setProfileImageData(img);
+            return;
         }
+        throw new IllegalArgumentException("Invalid profile image format. Use a data URI or an http(s) URL.");
+    }
+
+    public boolean isOwnedByEmail(Long userId, String email) {
+        if (userId == null || email == null || email.isBlank()) {
+            return false;
+        }
+        return appUserRepository.findById(userId)
+                .map(user -> user.getEmail() != null && user.getEmail().equalsIgnoreCase(email.trim()))
+                .orElse(false);
     }
 
     private static UserAdminListResponse toAdminListResponse(AppUser u) {

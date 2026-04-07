@@ -20,8 +20,8 @@
         </div>
 
         <form id="signin-form">
-            <label>Email
-                <input id="signin-email" type="email" placeholder="admin@smartcampus.edu" required>
+            <label>Email or username
+                <input id="signin-email" type="text" placeholder="you@smartcampus.edu or admin username" required>
             </label>
             <label>Password
                 <input id="signin-password" type="password" placeholder="Enter password" required>
@@ -75,14 +75,17 @@
         try {
             const email = document.getElementById("signin-email").value.trim().toLowerCase();
             const password = document.getElementById("signin-password").value;
+            const apiCfg = window.SmartCampusResourceApi || {};
+            const adminUsername = String(apiCfg.adminUsername || "admin").trim().toLowerCase();
+            const adminPassword = String(apiCfg.adminPassword || "123456");
 
-            if (email === "admin@gmail.com" && password === "123456") {
+            if (email === adminUsername && password === adminPassword) {
                 const adminUser = {
                     userId: 0,
                     fullName: "System Admin",
                     firstName: "System",
                     lastName: "Admin",
-                    email: "admin@gmail.com",
+                    email: adminUsername,
                     role: "ADMIN"
                 };
                 localStorage.setItem("smartCampusUser", JSON.stringify(adminUser));
